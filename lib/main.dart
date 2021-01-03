@@ -27,20 +27,10 @@ class MyCrossIntt extends StatefulWidget {
 }
 
 class _MyCrossInttState extends State<MyCrossIntt> {
-  static const duration = const Duration(seconds: 1);
   int counter = 1; //1 dan 25 e count değerini tutacak
+  int next = 1;
   List<int> valList = myList();
-
-  int secondsPassed = 0;
-  bool isActive = false;
-
-  Timer timer;
-
-  void handleTick() {
-    setState(() {
-      secondsPassed = secondsPassed + 1;
-    });
-  }
+  int _stopwatch = 0;
 
   static List<int> myList() {
     List<int> numbers = List.generate(25, (index) => index + 1);
@@ -50,40 +40,59 @@ class _MyCrossInttState extends State<MyCrossIntt> {
 
   @override
   Widget build(BuildContext context) {
-    if (timer == null) {
-      timer = Timer.periodic(duration, (Timer t) {
-        handleTick();
+    Timer.periodic(Duration(seconds: 1), (timer) {
+      setState(() {
+        _stopwatch++;
       });
-    }
-    int seconds = secondsPassed % 60;
-    int minutes = secondsPassed ~/ 60;
-    int hours = secondsPassed ~/ (60 * 60);
+    });
+
     String val;
     return new Scaffold(
       appBar: new AppBar(
         title: Center(child: new Text('Sayı Bulmaca')),
       ),
-      body: Container(
-        child: GridView.count(
-          crossAxisCount: 5,
-          children: new List<Widget>.generate(25, (index) {
-            val = valList[index].toString();
-            return new GridTile(
-              child: new InkWell(
-                //Tıklandığında efekt verip renk değiştiriyor.
+      body: Column(
+        children: [
+          Container(
+            width: 500,
+            height: 500,
+            child: GridView.count(
+              crossAxisCount: 5,
+              children: new List<Widget>.generate(25, (index) {
+                val = valList[index].toString();
+                return new GridTile(
+                  child: new InkWell(
+                    //Tıklandığında efekt verip renk değiştiriyor.
 
-                splashColor: Colors.purple,
-                onTap: () => onClickValues(index),
-                child: new Card(
-                  color: Colors.grey[300],
-                  child: new Center(
-                    child: new Text('$val'),
+                    splashColor: Colors.purple,
+                    onTap: () => onClickValues(index),
+                    child: new Card(
+                      color: Colors.grey[300],
+                      child: new Center(
+                        child: new Text('$val'),
+                      ),
+                    ),
                   ),
-                ),
+                );
+              }),
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              Container(
+                child: Text('Time: $_stopwatch'),
+                color: Colors.purple,
+                padding: EdgeInsets.all(20),
               ),
-            );
-          }),
-        ),
+              Container(
+                child: Text('Next: $next'),
+                color: Colors.purple,
+                padding: EdgeInsets.all(20),
+              ),
+            ],
+          )
+        ],
       ),
     );
   }
@@ -92,6 +101,7 @@ class _MyCrossInttState extends State<MyCrossIntt> {
     if (valList[index] == counter) {
       setState(() {
         counter++;
+        next = counter;
       });
       print(valList[index].toString());
       if (valList[index] == 25) {
