@@ -1,10 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 
-Stopwatch stopwatch;
 void main() {
-  stopwatch = Stopwatch();
-  stopwatch.start();
   runApp(new MyApp());
 }
 
@@ -45,10 +42,7 @@ class _MyCrossInttState extends State<MyCrossIntt> {
   Widget build(BuildContext context) {
     Timer.periodic(Duration(seconds: 1), (timer) {
       setState(() {
-        if (next != 26) {
-          _stopwatch =
-              stopwatch.elapsed.inSeconds; //Ekranda süreyi göstermemi sağlıyor
-        }
+        _stopwatch++;
       });
     });
 
@@ -111,8 +105,8 @@ class _MyCrossInttState extends State<MyCrossIntt> {
       });
       print(valList[index].toString());
       if (valList[index] == 25) {
+        counter = 1;
         print("oyun bitti");
-        stopwatch.stop();
       }
     }
   }
